@@ -19,7 +19,9 @@ async def on_ready():
 async def get(ctx, *, title):
     print(title)
     prodInfo = fetcher.fetch(title)
-    response = f'Average Cost: {prodInfo["avgCost"]}, Number of Listings: {prodInfo["count"]}'
+    response = f'**Title: {title.title()}** \n' 
+    response += f'**NEW** - Average Price: {prodInfo["newCost"]} \t Number of Listings: {prodInfo["newCount"]} \n'
+    response += f'**USED** - Average Price: {prodInfo["usedCost"]} \t Number of Listings {prodInfo["usedCount"]}'
     await ctx.send(response)
 
 bot.run(TOKEN)

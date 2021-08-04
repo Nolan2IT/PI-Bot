@@ -15,15 +15,30 @@ class eBayFetcher(object):
         try:
             response = self.api.execute('findItemsAdvanced', {'keywords': title})
             #print(response.reply)
-            avgCost = 0.0
-            count = 0
+            #print(f"Title: {item.title}, Price {item.sellingStatus.currentPrice.value}, Condition: {item.condition.conditionDisplayName}, LT: {item.listingInfo.listingType}")
+            newAvgCost = 0.0
+            newCount = 0
+            usedAvgCost = 0.0
+            usedCount = 0
+            newKeyWords = {'New', 'Digital Good', 'Like New', 'New-open box','Open box', 'New with tags', 'New without tags', 'New with defects', 'New with box', 'New without box', 'Brand New', 'New other (see details)'}
+            usedKeyWords = {'Used', 'Very Good' 'Good', 'Acceptable', 'Certified refurbished', 'Seller refurbished', 'Pre-owned', 'Certified pre-owned', 'Remanufactured', 'Retread'}
             for item in response.reply.searchResult.item:
-                print(f"Title: {item.title}, Price {item.sellingStatus.currentPrice.value}")
-                #if "New" == productCondition:
-                avgCost += float(item.sellingStatus.currentPrice.value)
-                count += 1
-            avgCost /= count
-            prodInfo = {'avgCost' : f"{avgCost:.2f}", 'count' : count}
+                try:
+                    if(item.listingInfo.listingType == 'FixedPrice' or item.listingInfo.listingType == 'StoreInventory'):
+                        #print(item.condition.conditionDisplayName)
+                        if item.condition.conditionDisplayName in newKeyWords:
+                            newAvgCost += float(item.sellingStatus.currentPrice.value)
+                            newCount += 1
+                        elif item.condition.conditionDisplayName in usedKeyWords:
+                            usedAvgCost += float(item.sellingStatus.currentPrice.value)
+                            usedCount += 1    
+                except:
+                   pass
+                
+            newAvgCost /= newCount
+            usedAvgCost /= usedCount
+            #for item
+            prodInfo = {'newCost' : f"{newAvgCost:.2f}", 'newCount' : newCount, 'usedCost' : f"{usedAvgCost:.2f}", 'usedCount' : usedCount}
             print(prodInfo)
             return prodInfo    
 
