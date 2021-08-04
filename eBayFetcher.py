@@ -36,5 +36,6 @@ class eBayFetcher(object):
         pass
 
 if __name__ == '__main__':
-    e = eBayFetcher(TOKEN)
+    e = eBayFetcher()
     e.fetch()
+    e.parse()
