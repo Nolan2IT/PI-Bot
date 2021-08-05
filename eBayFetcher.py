@@ -25,6 +25,7 @@ class eBayFetcher(object):
             for item in response.reply.searchResult.item:
                 try:
                     if(item.listingInfo.listingType == 'FixedPrice' or item.listingInfo.listingType == 'StoreInventory'):
+                        print(f"Title: {item.title}, Price {item.sellingStatus.currentPrice.value}, Condition: {item.condition.conditionDisplayName}, LT: {item.listingInfo.listingType}")
                         #print(item.condition.conditionDisplayName)
                         if item.condition.conditionDisplayName in newKeyWords:
                             newAvgCost += float(item.sellingStatus.currentPrice.value)
@@ -34,9 +35,10 @@ class eBayFetcher(object):
                             usedCount += 1    
                 except:
                    pass
-                
-            newAvgCost /= newCount
-            usedAvgCost /= usedCount
+            if newCount != 0:    
+                newAvgCost /= newCount
+            if usedCount != 0:
+                usedAvgCost /= usedCount
             #for item
             prodInfo = {'newCost' : f"{newAvgCost:.2f}", 'newCount' : newCount, 'usedCost' : f"{usedAvgCost:.2f}", 'usedCount' : usedCount}
             print(prodInfo)
